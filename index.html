@@ -779,11 +779,14 @@ function loadCrime() {
 }
 
 // ── IMAGE ──
-const KW  = ['mystery ancient library','vintage luxury hotel','art nouveau interior','golden hour architecture','renaissance museum','misty forest light','antique bookshop','marble staircase grand','candlelight still life','historic palace interior'];
 const CAP = ['El silencio también cuenta historias.','Los libros guardan secretos que los hombres olvidan.','La oscuridad tiene su propia forma de hablar.','Cada sombra esconde una historia sin contar.','El tiempo no borra los misterios; los perfecciona.','La belleza de lo antiguo es que ya no puede mentir.','Algunos lugares recuerdan lo que los hombres olvidan.','Lo que no se ve es lo que más merece mirarse.'];
 
+// Picsum IDs seleccionados a mano: arquitectura, naturaleza, interiores, arte
+const PICSUM_IDS = [1040, 1080, 1015, 1016, 1043, 1066, 1082, 167, 325, 431];
+
 function loadImage() {
-  document.getElementById('daily-img').src           = `https://source.unsplash.com/800x560/?${encodeURIComponent(KW[DI % KW.length])}&sig=${DI % 1000}`;
+  const id = PICSUM_IDS[DI % PICSUM_IDS.length];
+  document.getElementById('daily-img').src           = `https://picsum.photos/id/${id}/800/560`;
   document.getElementById('img-caption').textContent = CAP[DI % CAP.length];
 }
 

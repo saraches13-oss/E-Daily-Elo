@@ -648,18 +648,7 @@ const FACTS = [
   { t:"Your nose can detect over one trillion distinct scents — far more than the 10,000 previously thought. The human sense of smell is, by a vast margin, the most powerful and underrated sense we possess.", s:"Neuroscience of Wonder" },
 ];
 
-async function loadFact() {
-  try {
-    const r = await fetch('https://uselessfacts.jsph.pl/api/v2/facts/random?language=en', { signal: AbortSignal.timeout(4000) });
-    if (r.ok) {
-      const d = await r.json();
-      if (d.text && d.text.length > 80) {
-        document.getElementById('fact-text').textContent = d.text;
-        document.getElementById('fact-source').textContent = 'Source: Useless Facts API · Live';
-        return;
-      }
-    }
-  } catch(e) {}
+function loadFact() {
   const f = FACTS[DI % FACTS.length];
   document.getElementById('fact-text').textContent = f.t;
   document.getElementById('fact-source').textContent = `Source: ${f.s}`;

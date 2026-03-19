@@ -353,26 +353,51 @@
 
   /* ── IMAGE ── */
   .img-wrap {
-    position:relative; border-radius: 18px;
+    border-radius: 18px;
     overflow:hidden; margin-top: 4px;
   }
   .img-wrap img {
-    width:100%; height:280px;
+    width:100%; height:240px;
     object-fit:cover; display:block;
     transition: transform 0.5s ease;
     filter: saturate(0.9);
   }
   .img-wrap:hover img { transform: scale(1.03); filter: saturate(1); }
-  .img-overlay {
-    position:absolute; inset:0;
-    background: linear-gradient(to top, rgba(26,23,20,0.55) 0%, transparent 55%);
-  }
   .img-caption {
-    position:absolute; bottom:18px; left:20px; right:20px;
+    margin-top: 12px;
     font-family:'Cormorant Garamond',serif;
-    font-size:17px; font-style:italic; font-weight:300;
-    color:rgba(255,255,255,0.9); line-height:1.4;
+    font-size:15px; font-style:italic; font-weight:300;
+    color: var(--muted); line-height:1.5;
+    text-align: center;
   }
+
+  /* ── TIP NAVIGATOR ── */
+  .tip-nav {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  .tip-dots { display: flex; gap: 6px; align-items: center; }
+  .tip-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--muted2);
+    transition: background 0.2s, transform 0.2s;
+    cursor: pointer;
+  }
+  .tip-dot.active { background: var(--gold); transform: scale(1.3); }
+  .tip-arrow {
+    width: 32px; height: 32px;
+    border: 1px solid var(--gold-rim);
+    border-radius: 50%;
+    background: var(--warm);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    font-size: 14px; color: var(--gold);
+    transition: all 0.2s;
+    user-select: none;
+  }
+  .tip-arrow:hover { background: var(--gold); color: white; border-color: var(--gold); }
+  .tip-arrow.disabled { opacity: 0.3; pointer-events: none; }
+  .tip-counter { font-size: 11px; color: var(--muted); letter-spacing: 1px; }
 
   /* ── GRID ── */
   .grid-2 {
@@ -503,12 +528,28 @@
   <div class="section">
     <div class="section-row">
       <span class="section-num">02</span>
-      <span class="section-name">Tip de programación</span>
+      <span class="section-name">Tips de programación</span>
       <span class="section-line"></span>
     </div>
     <div class="card">
       <div class="card-body">
         <span class="tag tag-sage">⟡ Código</span>
+
+        <!-- Navigator -->
+        <div class="tip-nav">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <div class="tip-dots">
+              <div class="tip-dot active" onclick="goTip(0)"></div>
+              <div class="tip-dot" onclick="goTip(1)"></div>
+            </div>
+            <span class="tip-counter" id="tip-counter">1 / 2</span>
+          </div>
+          <div style="display:flex;gap:8px;">
+            <div class="tip-arrow disabled" id="arrow-prev" onclick="prevTip()">←</div>
+            <div class="tip-arrow" id="arrow-next" onclick="nextTip()">→</div>
+          </div>
+        </div>
+
         <div class="concept-pill" id="tip-concept">Concepto del día</div>
         <h2 class="card-title" id="tip-heading">—</h2>
         <div class="tip-text" id="tip-text">Cargando...</div>
@@ -531,45 +572,46 @@
     </div>
   </div>
 
-  <!-- 03 + 04 -->
+  <!-- 03 · TRUE CRIME -->
   <div class="section">
     <div class="section-row">
-      <span class="section-num">03 — 04</span>
-      <span class="section-name">True crime · Imagen del día</span>
+      <span class="section-num">03</span>
+      <span class="section-name">True crime español</span>
       <span class="section-line"></span>
     </div>
-    <div class="grid-2">
-
-      <!-- CRIME -->
-      <div class="card">
-        <div class="card-body">
-          <span class="tag tag-warm">⚑ True Crime</span>
-          <div class="crime-pills">
-            <span class="c-pill" id="crime-year">—</span>
-            <span class="c-pill" id="crime-place">—</span>
-          </div>
-          <div class="crime-heading" id="crime-title">Cargando caso...</div>
-          <p class="card-text" id="crime-text">—</p>
-          <div class="verdict-box">
-            <div class="verdict-label">Desenlace</div>
-            <div class="verdict-text" id="crime-verdict">—</div>
-          </div>
+    <div class="card">
+      <div class="card-body">
+        <span class="tag tag-warm">⚑ True Crime</span>
+        <div class="crime-pills">
+          <span class="c-pill" id="crime-year">—</span>
+          <span class="c-pill" id="crime-place">—</span>
+        </div>
+        <div class="crime-heading" id="crime-title">Cargando caso...</div>
+        <p class="card-text" id="crime-text">—</p>
+        <div class="verdict-box">
+          <div class="verdict-label">Desenlace</div>
+          <div class="verdict-text" id="crime-verdict">—</div>
         </div>
       </div>
+    </div>
+  </div>
 
-      <!-- IMAGE -->
-      <div class="card">
-        <div class="card-body" style="padding-bottom:20px">
-          <span class="tag tag-slate">◎ Imagen del día</span>
-          <div class="img-wrap">
-            <img id="daily-img" src="" alt="Imagen del día"
-              onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'800\' height=\'280\'%3E%3Crect fill=\'%23f5f3ee\' width=\'800\' height=\'280\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' text-anchor=\'middle\' dy=\'.3em\' fill=\'%23ccc8c0\' font-family=\'serif\' font-size=\'14\' font-style=\'italic\'%3ESin conexión%3C/text%3E%3C/svg%3E'">
-            <div class="img-overlay"></div>
-            <div class="img-caption" id="img-caption">—</div>
-          </div>
+  <!-- 04 · IMAGEN -->
+  <div class="section">
+    <div class="section-row">
+      <span class="section-num">04</span>
+      <span class="section-name">Imagen del día</span>
+      <span class="section-line"></span>
+    </div>
+    <div class="card">
+      <div class="card-body" style="padding-bottom:24px">
+        <span class="tag tag-slate">◎ Imagen del día</span>
+        <div class="img-wrap">
+          <img id="daily-img" src="" alt="Imagen del día"
+            onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'800\' height=\'240\'%3E%3Crect fill=\'%23f5f3ee\' width=\'800\' height=\'240\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' text-anchor=\'middle\' dy=\'.3em\' fill=\'%23ccc8c0\' font-family=\'serif\' font-size=\'14\' font-style=\'italic\'%3ESin conexión%3C/text%3E%3C/svg%3E'">
         </div>
+        <p class="img-caption" id="img-caption">—</p>
       </div>
-
     </div>
   </div>
 
@@ -735,15 +777,41 @@ saludar(<span class="cs">"Persona 2"</span>);
   },
 ];
 
-function loadTip() {
-  const t = TIPS[DI % TIPS.length];
+function renderTip(t) {
   document.getElementById('tip-concept').textContent  = `⟡ ${t.concept}`;
   document.getElementById('tip-heading').textContent  = t.heading;
   document.getElementById('tip-filename').textContent = t.file;
   document.getElementById('tip-text').innerHTML       = t.text.replace(/\n/g,'<br>');
   document.getElementById('tip-code').innerHTML       = t.code;
   window._demo = t.demo;
+  // close magic panel on switch
+  document.getElementById('magic-panel').classList.remove('open');
+  document.querySelector('.btn-magic').textContent = '✦  Ver la magia';
 }
+
+let _tipIdx = 0;
+const _tipPair = [TIPS[(DI * 2) % TIPS.length], TIPS[(DI * 2 + 1) % TIPS.length]];
+
+function loadTip() {
+  _tipIdx = 0;
+  renderTip(_tipPair[0]);
+  updateNav();
+}
+
+function updateNav() {
+  document.querySelectorAll('.tip-dot').forEach((d,i) => d.classList.toggle('active', i === _tipIdx));
+  document.getElementById('tip-counter').textContent = `${_tipIdx + 1} / 2`;
+  document.getElementById('arrow-prev').classList.toggle('disabled', _tipIdx === 0);
+  document.getElementById('arrow-next').classList.toggle('disabled', _tipIdx === 1);
+}
+
+function goTip(i) {
+  _tipIdx = i;
+  renderTip(_tipPair[i]);
+  updateNav();
+}
+function prevTip() { if (_tipIdx > 0) goTip(_tipIdx - 1); }
+function nextTip() { if (_tipIdx < 1) goTip(_tipIdx + 1); }
 
 function toggleMagic() {
   const p = document.getElementById('magic-panel');
@@ -760,13 +828,48 @@ function toggleMagic() {
 
 // ── CRIME ──
 const CRIMES = [
-  { title:"El Crimen de la Calle Fuencarral", year:"1888", place:"Madrid", text:"El 2 de julio de 1888, Luciana Borcino fue hallada muerta en su domicilio, aparentemente quemada viva. La investigación apuntó a su propio hijo y a la sirvienta Higinia Balaguer. El caso fue seguido con fascinación por toda España — el primer gran 'caso mediático' de la historia española, con periódicos publicando actualizaciones diarias.", verdict:"Higinia Balaguer fue ejecutada en garrote vil en 1890. El hijo fue absuelto entre enorme controversia. El caso marcó un hito en el periodismo de sucesos español." },
-  { title:"El Galeón San José y su Tesoro Sin Fondo", year:"1708", place:"Cartagena de Indias", text:"El San José transportaba más de 600 toneladas de oro, plata y esmeraldas. El 8 de junio de 1708 fue hundido por la flota inglesa en minutos, con casi 600 tripulantes a bordo. El lugar del naufragio fue secreto de Estado durante tres siglos.", verdict:"En 2015 Colombia anunció haber localizado el barco a 600 metros de profundidad. El tesoro —valorado entre 4.000 y 17.000 millones de dólares— sigue en disputa entre Colombia, España y Bolivia." },
-  { title:"Pilar Prades, la Última Ejecutada de España", year:"1954", place:"Valencia", text:"Pilar Prades trabajaba como sirvienta cuando varias familias que la habían empleado empezaron a morir envenenadas con cianuro. Los psiquiatras del juicio describieron una personalidad marcada por años de maltrato en la posguerra española.", verdict:"Condenada a muerte, fue ejecutada en garrote vil el 19 de mayo de 1959 — la última mujer ejecutada en España. Su caso reavivó el debate sobre la pena capital." },
-  { title:"El Fraude del Aceite de Colza", year:"1981", place:"España", text:"En primavera de 1981, miles de familias empezaron a enfermar con síntomas desconocidos. Los hospitales se desbordaron. La causa fue aceite industrial adulterado y vendido fraudulentamente como aceite de cocina. Más de 20.000 personas resultaron afectadas.", verdict:"Fallecieron más de 600 personas. Varios empresarios fueron condenados. Sigue siendo el mayor caso de intoxicación alimentaria intencionada de Europa, y transformó la regulación alimentaria del continente." },
-  { title:"El Caso del Rol y el Pánico Moral", year:"1994", place:"Madrid", text:"Un grupo de jóvenes aficionados a los juegos de rol fue acusado de un crimen que conmocionó España. Los medios construyeron una narrativa de terror. Sin embargo, la investigación reveló que los juegos no tenían nada que ver — había violencia doméstica y una situación familiar compleja detrás.", verdict:"El responsable fue condenado. Décadas después, el caso se estudia como ejemplo paradigmático de pánico moral mediático en la España de los 90." },
-  { title:"El Expediente Picasso y el Desastre del Annual", year:"1921", place:"Marruecos", text:"En julio de 1921, más de 10.000 soldados españoles murieron en el desastre de Annual. El general Picasso fue encargado de investigar las responsabilidades. Su informe señalaba directamente al rey Alfonso XIII.", verdict:"El expediente fue archivado por el golpe de Primo de Rivera en 1923. El rey nunca fue juzgado. El encubrimiento aceleró el camino hacia la Segunda República en 1931." },
-  { title:"La Conspiración del Notario de Graus", year:"1890", place:"Graus, Huesca", text:"Un notario y varios caciques locales habían falsificado documentos durante años para apropiarse de tierras comunales. El intelectual Joaquín Costa los llevó ante los tribunales en un proceso que duró más de una década.", verdict:"Varios implicados fueron condenados. Costa convirtió el caso en material para su obra sobre el caciquismo. Las tierras fueron parcialmente restituidas." },
+  {
+    title: "El Crimen de la Calle Fuencarral",
+    year: "1888", place: "Madrid",
+    text: `El 2 de julio de 1888, los vecinos del número 109 de la calle Fuencarral en Madrid alertaron a la policía: olía a quemado y nadie respondía a la puerta. Al entrar, encontraron a Luciana Borcino, una viuda de 52 años, muerta en su cama, con el cuerpo parcialmente calcinado. La escena era ambigua: podía ser un accidente, pero también podía ser algo mucho peor.\n\nLa investigación comenzó señalando a Higinia Balaguer, la sirvienta que dormía en la misma casa y que esa noche no dio ninguna explicación coherente sobre lo sucedido. Pero pronto apareció otro sospechoso mucho más dramático: José Vázquez Varela, el propio hijo de la víctima, que tenía deudas, una relación tormentosa con su madre y necesitaba urgentemente el dinero de la herencia.\n\nEl caso se convirtió en el primer gran escándalo mediático de la historia española. Los periódicos publicaban actualizaciones diarias, los cafés de Madrid debatían el caso a gritos, y el público tomó partido apasionadamente — unos por el hijo, otros por la sirvienta. España entera se convirtió en jurado popular antes de que existiera el concepto.`,
+    verdict: `Higinia Balaguer fue condenada a muerte y ejecutada en garrote vil en 1890, proclamando su inocencia hasta el final. José Vázquez fue absuelto entre enorme controversia popular. El caso marcó un antes y un después en el periodismo de sucesos español, y sigue siendo estudiado como el primer ejemplo de juicio paralelo mediático en España.`
+  },
+  {
+    title: "El Galeón San José y el Tesoro Más Grande del Mundo",
+    year: "1708", place: "Cartagena de Indias",
+    text: `El galeón San José no era un barco cualquiera. Era el buque insignia de la flota española del Pacífico, y el 8 de junio de 1708 navegaba cargado hasta los topes: según los registros de la época, transportaba más de 600 toneladas de oro, plata y esmeraldas provenientes de las colonias americanas, con destino a las arcas de Felipe V para financiar la Guerra de Sucesión española.\n\nEsa tarde, la flota inglesa del comodoro Charles Wager les interceptó frente a Cartagena de Indias. El combate fue feroz pero breve. En un momento dado, la santabárbara del San José — el polvorín donde se guardaba la munición — explotó. En cuestión de minutos, el barco se hundió con casi 600 hombres a bordo y su carga completa. Solo sobrevivieron once tripulantes.\n\nLo que siguió fue una de las historias de secretismo más largas de la historia: España guardó el lugar exacto del naufragio como secreto de Estado durante más de tres siglos. Piratas, cazatesoros y gobiernos enteros buscaron el San José sin éxito. Las coordenadas exactas del hundimiento eran un misterio que parecía destinado a no resolverse nunca.`,
+    verdict: `En noviembre de 2015, el gobierno colombiano anunció haber localizado los restos del San José a más de 600 metros de profundidad en el mar Caribe. Las imágenes mostraban cañones con el escudo de la corona española y miles de piezas intactas. El tesoro — valorado hoy entre 4.000 y 17.000 millones de dólares — sigue sin recuperarse, enredado en una disputa legal sin precedentes entre Colombia, España, Bolivia (que reclama parte de la plata como descendiente de las minas de Potosí) y varios grupos indígenas. Es el mayor caso de arqueología submarina vivo del mundo.`
+  },
+  {
+    title: "Pilar Prades, la Última Mujer Ejecutada en España",
+    year: "1954–1959", place: "Valencia",
+    text: `Pilar Prades Expósito había nacido en la miseria de la posguerra española. Huérfana desde joven, trabajó desde los 14 años como sirvienta en casas ajenas, siempre al margen, siempre invisible, siempre dependiente de la voluntad de otros. En 1954, con 30 años, algo se rompió.\n\nEn los meses siguientes, varias personas relacionadas con los hogares donde había trabajado comenzaron a morir con síntomas similares: convulsiones, dificultad respiratoria, colapso. Las autopsias revelaron envenenamiento sistemático con cianuro potásico. La investigación fue convergiendo lentamente hacia Pilar. Los motivos que los investigadores reconstruyeron eran difusos: resentimientos acumulados durante años de humillaciones, tal vez codicia en algún caso, una psicología moldeada por décadas de trauma.\n\nEl juicio fue un acontecimiento. Los psiquiatras debatieron si era imputable. La defensa argumentó que su historia de vida la había roto antes de que pudiera romperse a sí misma. La fiscalía pidió la pena máxima. España franquista de los 50 no tenía espacio para la compasión en casos así.`,
+    verdict: `Pilar Prades fue condenada a muerte y ejecutada en garrote vil el 19 de mayo de 1959 en la prisión de Valencia. Fue la última mujer ejecutada en España. Tenía 35 años. Su caso reavivó un debate sobre la pena de muerte que no se resolvería hasta la transición democrática, y sigue siendo citado por juristas y criminólogos como ejemplo de cómo la pobreza y el trauma pueden construir a una asesina.`
+  },
+  {
+    title: "El Fraude del Aceite de Colza: 600 Muertos y un País en Shock",
+    year: "1981", place: "España",
+    text: `En la primavera de 1981, los médicos de urgencias de varios hospitales españoles empezaron a ver algo que no habían visto nunca: pacientes con una combinación extraña de síntomas — fiebre alta, dificultad para respirar, dolores musculares intensos, y en los casos más graves, pérdida progresiva de movilidad. No había diagnóstico conocido. Al principio se pensó en una epidemia gripal atípica.\n\nEn semanas, los hospitales se desbordaron. Había familias enteras afectadas. La geografía de los casos dibujaba un patrón: las zonas rurales y los barrios humildes de las periferia urbana eran los más golpeados. La clave la dio un epidemiólogo que notó que los afectados habían comprado aceite de venta ambulante, más barato que el de las tiendas. Ese aceite, supuestamente de oliva o de girasol, era en realidad aceite de colza desnaturalizado con anilinas — un producto destinado a uso industrial que había sido "refinado" fraudulentamente para venderlo como comestible por toda una red de intermediarios.\n\nLa estafa había pasado por varias manos: importadores que compraron el aceite industrial a bajo precio, refinadores clandestinos que lo procesaban ilegalmente, distribuidores que lo embotellaban con etiquetas falsas, y vendedores ambulantes que lo colocaban en mercadillos y pueblos. Nadie en la cadena ignoraba del todo lo que hacía, pero nadie asumía la responsabilidad del conjunto.`,
+    verdict: `Fallecieron más de 600 personas de forma directamente atribuible al síndrome tóxico, aunque estimaciones posteriores elevan la cifra real. Más de 20.000 personas sufrieron secuelas permanentes — neuropatías, parálisis, daño pulmonar — con las que convivieron el resto de sus vidas. Varios empresarios fueron condenados, aunque las penas generaron polémica por considerarse insuficientes. El caso transformó radicalmente la regulación alimentaria española y europea, y sigue siendo el mayor envenenamiento alimentario masivo intencionado de la historia del continente.`
+  },
+  {
+    title: "El Caso del Rol: Cómo España Criminalizó un Juego de Mesa",
+    year: "1994", place: "Madrid",
+    text: `En 1994, un crimen real — el asesinato de los padres de un joven en Madrid — se convirtió en el detonante de uno de los mayores pánicos morales de la historia reciente española. El joven en cuestión era aficionado a los juegos de rol, ese género de entretenimiento narrativo donde los participantes interpretan personajes en aventuras de fantasía. Y eso fue suficiente para que los medios de comunicación construyeran una narrativa aterradora.\n\nDurante semanas, televisiones y periódicos dibujaron un retrato de los juegos de rol como un portal hacia la violencia, el satanismo y la pérdida de contacto con la realidad. Se entrevistó a "expertos" que describían rituales oscuros. Padres de toda España confiscaron los libros de rol de sus hijos. Asociaciones religiosas pidieron su prohibición. Políticos de varios partidos se subieron al carro.\n\nLo que los medios ignoraron, minimizaron o directamente no investigaron era la realidad detrás del crimen: una historia de violencia doméstica prolongada, una situación familiar profundamente disfuncional, y un joven que había crecido en un entorno de abuso. Los juegos de rol no tenían absolutamente nada que ver con lo ocurrido.`,
+    verdict: `El responsable del crimen fue condenado. Décadas después, sociólogos, periodistas y criminólogos han analizado el caso como ejemplo paradigmático de pánico moral mediático: la búsqueda de un chivo expiatorio cultural simple (los juegos de rol, los jóvenes raros, lo "diferente") para explicar una violencia cuyas causas reales eran mucho más incómodas de examinar. Los juegos de rol quedaron estigmatizados en España durante años, y toda una generación de aficionados vivió bajo sospecha.`
+  },
+  {
+    title: "El Expediente Picasso: El Rey que Nunca fue Juzgado",
+    year: "1921–1923", place: "Marruecos / Madrid",
+    text: `El 22 de julio de 1921, el ejército español sufrió en Annual, Marruecos, una de las derrotas militares más catastróficas de su historia moderna. En apenas unos días, más de 10.000 soldados españoles murieron a manos de las tropas rifeñas lideradas por Abd el-Krim. Fue un colapso total, agravado por la huida caótica de mandos y tropa, el abandono de posiciones, y una cadena de errores que evidenciaba una gestión militar gravemente incompetente.\n\nEl escándalo fue mayúsculo. El Congreso exigió responsabilidades. El general Juan Picasso — sin relación con el pintor — fue encargado de redactar un informe exhaustivo sobre lo ocurrido. Durante más de un año, Picasso recopiló testimonios, documentos y pruebas. Su conclusión fue explosiva: la responsabilidad llegaba hasta las más altas esferas, incluyendo al propio rey Alfonso XIII, que había presionado al general Fernández Silvestre — al mando en Annual — para avanzar más rápido de lo aconsejable, supuestamente para apuntarse un éxito militar personal.\n\nEl expediente Picasso era, en esencia, un documento que podía llevar al rey ante los tribunales. El Parlamento se preparaba para debatirlo. Era septiembre de 1923.`,
+    verdict: `El 13 de septiembre de 1923, el general Miguel Primo de Rivera dio un golpe de Estado con el beneplácito del rey Alfonso XIII. El Parlamento fue disuelto. El expediente Picasso fue archivado y nunca debatido. Alfonso XIII nunca fue juzgado. La impunidad del encubrimiento alimentó el descrédito de la monarquía, acelerando el camino hacia la Segunda República en 1931. El expediente Picasso sigue siendo uno de los documentos más estudiados — y más políticamente incómodos — de la historia contemporánea española.`
+  },
+  {
+    title: "La Conspiración del Notario de Graus",
+    year: "1885–1903", place: "Graus, Huesca",
+    text: `Joaquín Costa era uno de los intelectuales más brillantes y combativos de la España de finales del siglo XIX. Jurista, historiador, político, escritor — un hombre que creía que España podía regenerarse si se arrancaba de raíz la corrupción que la anquilosaba. Y tuvo ocasión de demostrarlo en su propio pueblo natal: Graus, en el Pirineo aragonés.\n\nDurante años, un notario local y una red de caciques habían falsificado documentos sistemáticamente para apropiarse de tierras comunales que pertenecían a los vecinos más pobres del municipio. El mecanismo era sofisticado: escrituras falsas, testamentos alterados, firmas apócrifas, y una red de complicidades que incluía a jueces locales y funcionarios que miraban hacia otro lado. Los afectados eran campesinos analfabetos que no sabían cómo defenderse ante un sistema diseñado para aplastarlos.\n\nCosta los escuchó, estudió los documentos, y decidió llevar el caso a los tribunales. Lo que siguió fue un proceso kafkiano de más de quince años: recursos, apelaciones, presiones, amenazas. El poder local hizo todo lo posible para que el caso desapareciera. Costa no cedió.`,
+    verdict: `Tras más de una década de litigios, varios de los implicados fueron finalmente condenados y las tierras parcialmente restituidas a los vecinos. Costa convirtió el caso en material central para su célebre obra sobre el caciquismo y la regeneración española, que influiría en generaciones de reformadores. El caso de Graus es hoy un ejemplo temprano de activismo legal en defensa de los más vulnerables, y un recordatorio de que la corrupción local, cuando se documenta y se persiste, puede ser derrotada.`
+  },
 ];
 
 function loadCrime() {
@@ -774,7 +877,7 @@ function loadCrime() {
   document.getElementById('crime-title').textContent   = c.title;
   document.getElementById('crime-year').textContent    = c.year;
   document.getElementById('crime-place').textContent   = c.place;
-  document.getElementById('crime-text').textContent    = c.text;
+  document.getElementById('crime-text').innerHTML      = c.text.replace(/\n/g,'<br><br>');
   document.getElementById('crime-verdict').textContent = c.verdict;
 }
 
